@@ -1,0 +1,61 @@
+---
+title: "Make Menstrual Cycle Gif"
+author: "Katie"
+date: "6/1/2020"
+output: html_document
+---
+
+Note that this code seems to require R version 3.6.2 or higher (for some of the gif/animation packages). The first code "chunk" may require running for some people who have not previously installed these packages, but is not included or evaluated in this R markdown.
+
+
+
+```{r ThisChunkMightRequireRunningSeparatelyOnNewSystem, include=FALSE, eval=FALSE}
+# Trying to use GGanimate to make graph for hormone data.
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("gganimate")
+install.packages("gifski")
+install.packages("transformr")
+
+
+```
+
+```{r LoadPackagesDataAndClean, echo = FALSE, warnings = FALSE, include = FALSE}
+
+##############
+#Load Packages
+library(ggplot2)
+library(gganimate)
+library(gifski)
+library(dplyr)
+library(transformr)
+
+##############
+#Load Data
+
+
+pdData <- read.csv("EstrogenCycleData.csv") # Read dataset
+
+pdData <- pdData %>% filter(!is.na(ovAdjDay)) # 
+pdData$id <- as.factor(pdData$id)
+```
+
+
+```{r MakeGif, warning = FALSE, echo = FALSE}
+
+plotGif <- ggplot(pdData, aes(x = ovAdjDay, y = E1G, colour = id)) + 
+  geom_point(aes(color = id)) + 
+  geom_line(aes(colour = id, alpha = 0.1)) + 
+  xlab("Cycle Day (aligned by ovulation)") +
+  ylab("E1G conentration (ng/mL)") + 
+  theme_classic() + theme(legend.position="none") + 
+  transition_reveal(ovAdjDay)
+
+
+gifOut <- animate(plotGif, nframes = 300, duration = 15, fps = 20, end_pause = 100, rewind = FALSE)
+
+gifOut
+
+anim_save("cyclesGif.gif", animation = gifOut)
+```
+
