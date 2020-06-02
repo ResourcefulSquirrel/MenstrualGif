@@ -16,8 +16,6 @@ install.packages("dplyr")
 install.packages("gganimate")
 install.packages("gifski")
 install.packages("transformr")
-
-
 ```
 
 ```{r LoadPackagesDataAndClean, echo = FALSE, warnings = FALSE, include = FALSE}
@@ -32,7 +30,6 @@ library(transformr)
 
 ##############
 #Load Data
-
 
 pdData <- read.csv("EstrogenCycleData.csv") # Read dataset
 
@@ -51,11 +48,9 @@ plotGif <- ggplot(pdData, aes(x = ovAdjDay, y = E1G, colour = id)) +
   theme_classic() + theme(legend.position="none") + 
   transition_reveal(ovAdjDay)
 
-
 gifOut <- animate(plotGif, nframes = 300, duration = 15, fps = 20, end_pause = 100, rewind = FALSE)
 
 gifOut
 
 anim_save("cyclesGif.gif", animation = gifOut)
 ```
-
